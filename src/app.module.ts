@@ -4,6 +4,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import {ServeStaticModule} from '@nestjs/serve-static'
 import { ConfigModule } from '@nestjs/config';
+import {MongooseModule} from "@nestjs/mongoose";
+import { TestModule } from './test/test.module';
 import * as Joi from '@hapi/joi'
 
 @Module({
@@ -24,7 +26,12 @@ import * as Joi from '@hapi/joi'
               allowUnknow: false,
               abortEarly: true
           }
-      })
+      }),
+      MongooseModule.forRoot('mongodb://localhost:27017/test',{
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+      }),
+      TestModule
   ],
   controllers: [AppController],
   providers: [AppService],
