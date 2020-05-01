@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import {ServeStaticModule} from '@nestjs/serve-static'
 import { ConfigModule } from '@nestjs/config';
+import * as Joi from '@hapi/joi'
 
 @Module({
   imports: [
@@ -12,7 +13,17 @@ import { ConfigModule } from '@nestjs/config';
       }),
       ConfigModule.forRoot({
           envFilePath: `${join(__dirname,'..','config')}/.env.${process.env.NODE_ENV || 'development'}`,
-          isGlobal: true
+          isGlobal: true,
+          validationSchema:Joi.object({
+              NODE_ENV: Joi.string()
+                  .valid('development','production','release','test')
+                  .default('development'),
+              ENV_ABBR: Joi.string().valid('dev','prod','rls','tst').default('dev')
+          }),
+          validationOptions: {
+              allowUnknow: false,
+              abortEarly: true
+          }
       })
   ],
   controllers: [AppController],
